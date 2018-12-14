@@ -20,4 +20,5 @@ from app01 import views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('students/', views.students),
+    path('add_student/', views.add_student),
 ]

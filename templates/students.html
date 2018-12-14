@@ -57,23 +57,23 @@
                 <h4 class="modal-title" id="myModalLabel">创建学生</h4>
             </div>
             <div class="modal-body">
-                <form class="form-horizontal">
+                <form class="form-horizontal">{% csrf_token %}
                     <div class="form-group">
                         <label for="user" class="col-sm-2 control-label">User</label>
                         <div class="col-sm-10">
-                            <input type="text" class="form-control" id="user" placeholder="user">
+                            <input type="text" class="form-control" name="user" placeholder="user">
                         </div>
                     </div>
                     <div class="form-group">
                         <label for="pwd" class="col-sm-2 control-label">Password</label>
                         <div class="col-sm-10">
-                            <input type="password" class="form-control" id="pwd" placeholder="Password">
+                            <input type="password" class="form-control" name="pwd" placeholder="Password">
                         </div>
                     </div>
                     <div class="form-group">
                         <label for="age" class="col-sm-2 control-label">age</label>
                         <div class="col-sm-10">
-                            <input type="text" class="form-control" id="age" placeholder="age">
+                            <input type="text" class="form-control" name="age" placeholder="age">
                         </div>
                     </div>
                     <div class="form-group">
@@ -90,9 +90,9 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <label for="gender" class="col-sm-2 control-label">班级</label>
+                        <label for="cls_id" class="col-sm-2 control-label">班级</label>
                         <div class="col-sm-10">
-                            <select class="form-control" id="cls_id">
+                            <select class="form-control"  name="cls_id">
                                 {% for row in class_list %}
                                     <option value="{{ row.id }}">{{ row.title }}</option>
                                 {% endfor %}
@@ -104,8 +104,9 @@
                 </form>
             </div>
             <div class="modal-footer">
+                <span id="errMsg" style="color: red;"></span>
                 <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-                <button type="button" class="btn btn-primary">报错</button>
+                <button type="button" class="btn btn-primary" id="btnSave">保存</button>
             </div>
         </div>
     </div>
@@ -117,13 +118,47 @@
 <script>
     $(function () {
         bindEvent();
+        bindSave();
     });
 
     function bindEvent() {
         $("#addBtn").click(function () {
             $("#addModal").modal('show');
         })
-    };
+    }
+
+    function bindSave() {
+        var postData = {};
+        $("#btnSave").click(function () {
+            $("#addModal").find('input,select').each(function () {
+                v = $(this).val();
+                n = $(this).attr('name');
+                if(n=='gender'){
+                    if($(this).prop('checked')){
+                        postData[n] = v;
+                    }
+                }else{
+                    postData[n] = v;
+                }
+            });
+
+            $.ajax({
+                url: "/add_student/",
+                type: 'POST',
+                data: postData,
+                success: function (arg) {
+                    // arg是字符串
+                    var dict = JSON.parse(arg);
+                    console.log(dict,123);
+                    if(dict.status){
+                        window.location.reload();
+                    }else{
+                        $('#errMsg').text(dict.msg);
+                    }
+                }
+            })
+        });
+    }
 </script>
 </body>
 </html>
