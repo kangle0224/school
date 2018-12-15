@@ -32,6 +32,7 @@
             </thead>
             <tbody id="tb">
             {% for row in stu_list %}
+                // 36行很重要
                 <tr nid="{{ row.id }}">
                     <td>{{ row.id }}</td>
                     <td>{{ row.username }}</td>
@@ -150,6 +151,7 @@
         $('.del-row').click(function () {
             $("#delModal").modal("show");
             var rowId = $(this).parent().parent().attr('nid');
+            // 给delNid赋值
             $('#delNid').val(rowId);
 
         })
@@ -168,16 +170,10 @@
                     if(dict.status){
                         $("tr[nid='" + rowId +"']").remove();
                         $("#delModal").modal("hide");
-
                     }
-
                 }
             })
-
-
         })
-
-
     }
 
     function bindEvent() {
