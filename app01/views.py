@@ -1,5 +1,6 @@
 from django.shortcuts import render, HttpResponse
 from app01 import models
+import json
 
 def students(request):
     class_list = models.Classes.objects.all()
@@ -26,5 +27,16 @@ def add_student(request):
         response["msg"] = '用户输入错误'
         print(e)
         print(response)
-    import json
+
     return HttpResponse(json.dumps(response, ensure_ascii=False))
+
+def del_student(request):
+    ret = {"status": True}
+    try:
+        nid = request.GET.get("nid")
+        v=models.Student.objects.filter(id=nid).delete()
+        print(v)
+    except Exception as e:
+        ret["status"] = False
+
+    return HttpResponse(json.dumps(ret))
