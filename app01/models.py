@@ -10,4 +10,5 @@ class Teacher(models.Model):
 class Student(models.Model):
     username = models.CharField(max_length=32)
     age = models.IntegerField()
+    gender = models.BooleanField()
     cs = models.ForeignKey('Classes', on_delete=True)

@@ -25,16 +25,18 @@
                 <th>ID</th>
                 <th>姓名</th>
                 <th>年龄</th>
+                <th>性别</th>
                 <th>班级</th>
                 <th>操作</th>
             </tr>
             </thead>
-            <tbody>
+            <tbody id="tb">
             {% for row in stu_list %}
                 <tr>
                     <td>{{ row.id }}</td>
                     <td>{{ row.username }}</td>
                     <td>{{ row.age }}</td>
+                    <td>{{ row.gender }}</td>
                     <td>{{ row.cs.title }}</td>
                     <td>
                         <a class="fa fa-trash icon" aria-hidden="true"></a> |
@@ -57,7 +59,7 @@
                 <h4 class="modal-title" id="myModalLabel">创建学生</h4>
             </div>
             <div class="modal-body">
-                <form class="form-horizontal">{% csrf_token %}
+                <form id="fm" class="form-horizontal">{% csrf_token %}
                     <div class="form-group">
                         <label for="user" class="col-sm-2 control-label">User</label>
                         <div class="col-sm-10">
@@ -131,8 +133,8 @@
         var postData = {};
         $("#btnSave").click(function () {
             $("#addModal").find('input,select').each(function () {
-                v = $(this).val();
-                n = $(this).attr('name');
+                var v = $(this).val();
+                var n = $(this).attr('name');
                 if(n=='gender'){
                     if($(this).prop('checked')){
                         postData[n] = v;
@@ -148,16 +150,54 @@
                 data: postData,
                 success: function (arg) {
                     // arg是字符串
+                    console.log(postData);
                     var dict = JSON.parse(arg);
                     console.log(dict,123);
                     if(dict.status){
-                        window.location.reload();
+                        // 方式一：刷新
+                        // window.location.reload(); 刷新方式
+                        // 方式二：不刷新
+                        createRow(postData, dict.data);
+                        $("#addModal").modal('hide');
                     }else{
                         $('#errMsg').text(dict.msg);
                     }
                 }
             })
         });
+    }
+    function createRow(postData, nid) {
+        var tr = document.createElement("tr");
+        var tdId = document.createElement("td");
+        tdId.innerHTML = nid;
+        $(tr).append(tdId);
+
+        var tdUser = document.createElement("td");
+        tdUser.innerHTML = postData.user;
+        $(tr).append(tdUser);
+
+        var tdAge = document.createElement("td");
+        tdAge.innerHTML = postData.age;
+        $(tr).append(tdAge);
+
+        var tdGender = document.createElement("td");
+        if (postData.gender=='0'){
+            tdGender.innerHTML = "False";
+        }else{
+            tdGender.innerHTML = "True";
+        }
+        $(tr).append(tdGender);
+
+        var tdClass = document.createElement("td");
+        var text = $("select[name='cls_id']").find('option[value="' + postData.cls_id + '"]').text();
+        tdClass.innerHTML = text;
+        $(tr).append(tdClass);
+
+
+        var tdHandle = '<td><a class="fa fa-trash icon" aria-hidden="true"></a> | <a class="fa fa-pencil-square-o icon" aria-hidden="true"></a></td>'
+        $(tr).append(tdHandle);
+        $("#tb").append(tr);
+
     }
 </script>
 </body>
