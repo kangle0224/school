@@ -60,3 +60,7 @@ def edit_student(request):
         response["code"] = 1001
         response["msg"] = str(e)
     return HttpResponse(json.dumps(response))
+
+def test(request):
+    print(request.POST.getlist(""))
+    return HttpResponse('....')

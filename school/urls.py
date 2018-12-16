@@ -23,4 +23,5 @@ urlpatterns = [
     path('add_student/', views.add_student),
     path('del_student/', views.del_student),
     path('edit_student/', views.edit_student),
+    path('test/', views.test),
 ]

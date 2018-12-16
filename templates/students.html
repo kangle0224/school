@@ -14,6 +14,14 @@
 </head>
 <body>
 <div class="container">
+    <div>
+        <select id="sel" multiple>
+            <option value="1">北京</option>
+            <option value="2">上海</option>
+            <option value="3">广州</option>
+        </select>
+        <input type="button" id="btnTest" value="提交">
+    </div>
     <div style="padding: 20px 0;">
         <button type="button" class="btn btn-primary" id="addBtn">添加</button>
         <button type="button" class="btn btn-danger">删除</button>
@@ -203,8 +211,27 @@
         bindCancelDel();
         bindEdit();
         bindbtnEditConfirm();
+        bindTest();
     });
-    
+
+    function bindTest() {
+        $('#btnTest').click(function () {
+            var values = $('#sel').val();
+            console.log(values);
+            $.ajax({
+                url: '/test/',
+                type: 'POST',
+                data: {"k": values},
+                traditional: true,
+                success: function (arg) {
+                    console.log(123);
+
+                }
+            })
+
+        })
+
+    }
     function bindbtnEditConfirm() {
         var postData = {};
         $("#btnEditSave").click(function () {
